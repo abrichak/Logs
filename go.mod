@@ -8,8 +8,9 @@ require (
 	github.com/go-redis/redis/v7 v7.4.0
 	github.com/joho/godotenv v1.3.0
 	github.com/labstack/echo/v4 v4.1.16
+	github.com/prometheus/client_golang v1.7.1
 	github.com/stretchr/testify v1.5.1
 	github.com/swaggo/echo-swagger v1.0.0
 	github.com/swaggo/swag v1.6.7
-	golang.org/x/sync v0.0.0-20190423024810-112230192c58
+	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 )
