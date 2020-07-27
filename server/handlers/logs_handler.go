@@ -8,14 +8,19 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type LogsHandler struct {
-	server *s.Server
+	server          *s.Server
+	uniqueIPsMetric *prometheus.Gauge
 }
 
-func NewLogsHandler(server *s.Server) *LogsHandler {
-	return &LogsHandler{server: server}
+func NewLogsHandler(server *s.Server, uniqueIPsMetric *prometheus.Gauge) *LogsHandler {
+	return &LogsHandler{
+		server: server,
+		uniqueIPsMetric: uniqueIPsMetric,
+	}
 }
 
 // SaveLog godoc
@@ -34,7 +39,7 @@ func (handler *LogsHandler) SaveLogMessage(c echo.Context) error {
 		return err
 	}
 
-	logService := services.NewLogService(handler.server)
+	logService := services.NewLogService(handler.server, handler.uniqueIPsMetric)
 	if err := logService.SaveLogMessage(logRequest); err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Server error")
 	}
