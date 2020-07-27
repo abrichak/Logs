@@ -11,8 +11,10 @@ import (
 func NewServer() *server.Server {
 	loadEnv()
 
+	_, redisClient := InitRedis()
 	s := &server.Server{
 		Echo:  echo.New(),
+		Redis: redisClient,
 	}
 
 	routes.ConfigureRoutes(s)
