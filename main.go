@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"metrics-service/server"
+	"metrics-service/server/routes"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -16,6 +17,7 @@ func main() {
 
 	app := server.NewServer()
 
+	routes.ConfigureRoutes(app)
 	err = app.Start(os.Getenv("PORT"))
 
 	if err != nil {
