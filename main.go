@@ -34,21 +34,21 @@ func main() {
 
 	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("EXPOSE_PORT"))
 
-	var g errgroup.Group
+	// We need 2 app instances for different ports, because the framework allows the routing
+	// only using 1 port per application instance
+	appMetrics := server.NewServer()
+	uniqueIPs := routes.ConfigureMetricsRoutes(appMetrics)
 
 	appLogs := server.NewServer()
-	routes.ConfigureLogsRoutes(appLogs)
+	routes.ConfigureLogsRoutes(appLogs, uniqueIPs)
 
-	appMetrics := server.NewServer()
-	routes.ConfigureMetricsRoutes(appMetrics)
-
-	// Delete the IP addresses list on service start
+	// Delete the IP addresses list on service start according to the requirements
 	appLogs.Redis.Del(services.CacheKeyForIps)
 
+	var g errgroup.Group
 	g.Go(func() error {
 		return appLogs.Start(os.Getenv("PORT"))
 	})
-
 	g.Go(func() error {
 		return appMetrics.Start(os.Getenv("PORT_METRICS"))
 	})
