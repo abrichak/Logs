@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  metrics_api:
+    container_name: metrics_api
+    build: .
+    ports:
+      - ${EXPOSE_PORT}:${PORT}
+    restart: on-failure
+    volumes:
+      - ./:/api/
+    env_file:
+      - .env
+    networks:
+      - metrics-network
+
+networks:
+  metrics-network:
+    driver: bridge
