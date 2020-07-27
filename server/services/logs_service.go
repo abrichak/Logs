@@ -22,7 +22,7 @@ func (service LogService) SaveLogMessage(request *requests.SaveLogRequest) error
 	// 2. Redis DB allows horizontal scalability
 	// 3. In case we need to add logic to our logs processing (e.g., how many times user requested our site), we can use
 	// the "hash" Redis type to save the necessary info
-	service.Server.Redis.HSet(CacheKeyForIps, request.IP, "1")
-
-	return nil
+	return service.Server.Redis.
+		HSet(CacheKeyForIps, request.IP, "1").
+		Err()
 }
