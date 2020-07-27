@@ -7,10 +7,16 @@ import (
 	"metrics-service/server/handlers"
 )
 
-func ConfigureRoutes(server *s.Server) {
+func ConfigureLogsRoutes(server *s.Server) {
 	server.Echo.Use(middleware.Logger())
 
 	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	server.Echo.POST("/logs", handlers.NewLogsHandler(server).SaveLogMessage)
+}
+
+func ConfigureMetricsRoutes(server *s.Server) {
+	server.Echo.Use(middleware.Logger())
+
+	server.Echo.GET("/metrics", handlers.NewMetricsHandler(server).GetIPsCount)
 }

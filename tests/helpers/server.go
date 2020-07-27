@@ -17,7 +17,7 @@ func NewServer() *server.Server {
 		Redis: redisClient,
 	}
 
-	routes.ConfigureRoutes(s)
+	routes.ConfigureLogsRoutes(s)
 
 	return s
 }
