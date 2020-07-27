@@ -6,6 +6,7 @@ import (
 	"metrics-service/docs"
 	"metrics-service/server"
 	"metrics-service/server/routes"
+	"metrics-service/server/services"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -40,6 +41,9 @@ func main() {
 
 	appMetrics := server.NewServer()
 	routes.ConfigureMetricsRoutes(appMetrics)
+
+	// Delete the IP addresses list on service start
+	appLogs.Redis.Del(services.CacheKeyForIps)
 
 	g.Go(func() error {
 		return appLogs.Start(os.Getenv("PORT"))
