@@ -8,8 +8,23 @@ services:
     restart: on-failure
     volumes:
       - ./:/api/
+    depends_on:
+      - ${REDIS_HOST}
     env_file:
       - .env
+    environment:
+      - WAIT_HOSTS=${REDIS_HOST}:${REDIS_PORT}
+      - WAIT_BEFORE_HOSTS=15
+      - WAIT_SLEEP_INTERVAL=3
+    networks:
+      - metrics-network
+
+  metrics_redis:
+    image: redis
+    container_name: metrics_redis
+    restart: unless-stopped
+    ports:
+      - 63791:${REDIS_PORT}
     networks:
       - metrics-network
 
