@@ -10,11 +10,12 @@ import (
 )
 
 type TestCase struct{
-	TestName    string
-	Request     Request
-	RequestBody interface{}
-	HandlerFunc func(s *server.Server, c echo.Context) error
-	Expected    ExpectedResponse
+	TestName    	 string
+	Request     	 Request
+	RequestBody 	 interface{}
+	HandlerFunc 	 func(s *server.Server, c echo.Context) error
+	Expected    	 ExpectedResponse
+	ExpectedIPsCount int
 }
 
 type Request struct {

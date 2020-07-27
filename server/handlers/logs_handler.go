@@ -34,7 +34,7 @@ func (handler *LogsHandler) SaveLogMessage(c echo.Context) error {
 		return err
 	}
 
-	logService := services.NewLogService()
+	logService := services.NewLogService(handler.server)
 	if err := logService.SaveLogMessage(logRequest); err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Server error")
 	}
