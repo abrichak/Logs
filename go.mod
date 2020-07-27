@@ -11,4 +11,5 @@ require (
 	github.com/stretchr/testify v1.5.1
 	github.com/swaggo/echo-swagger v1.0.0
 	github.com/swaggo/swag v1.6.7
+	golang.org/x/sync v0.0.0-20190423024810-112230192c58
 )

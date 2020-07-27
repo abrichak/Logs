@@ -5,6 +5,7 @@ services:
     build: .
     ports:
       - ${EXPOSE_PORT}:${PORT}
+      - ${EXPOSE_PORT_METRICS}:${PORT_METRICS}
     restart: on-failure
     volumes:
       - ./:/api/

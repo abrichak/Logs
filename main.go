@@ -6,9 +6,11 @@ import (
 	"metrics-service/docs"
 	"metrics-service/server"
 	"metrics-service/server/routes"
+	"metrics-service/server/services"
 	"os"
 
 	"github.com/joho/godotenv"
+	"golang.org/x/sync/errgroup"
 )
 
 // @title Metrics Service API
@@ -32,12 +34,26 @@ func main() {
 
 	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("EXPOSE_PORT"))
 
-	app := server.NewServer()
+	var g errgroup.Group
 
-	routes.ConfigureRoutes(app)
-	err = app.Start(os.Getenv("PORT"))
+	appLogs := server.NewServer()
+	routes.ConfigureLogsRoutes(appLogs)
 
-	if err != nil {
-		log.Fatal("Port already used")
+	appMetrics := server.NewServer()
+	routes.ConfigureMetricsRoutes(appMetrics)
+
+	// Delete the IP addresses list on service start
+	appLogs.Redis.Del(services.CacheKeyForIps)
+
+	g.Go(func() error {
+		return appLogs.Start(os.Getenv("PORT"))
+	})
+
+	g.Go(func() error {
+		return appMetrics.Start(os.Getenv("PORT_METRICS"))
+	})
+
+	if err := g.Wait(); err != nil {
+		log.Fatal(err)
 	}
 }
